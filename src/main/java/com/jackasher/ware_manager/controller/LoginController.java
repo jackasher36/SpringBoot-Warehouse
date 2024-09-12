@@ -5,6 +5,10 @@ import com.jackasher.ware_manager.entity.LoginUser;
 import com.jackasher.ware_manager.entity.Result;
 import com.jackasher.ware_manager.entity.User;
 import com.jackasher.ware_manager.service.UserService;
+import com.jackasher.ware_manager.utils.CurrentUser;
+import com.jackasher.ware_manager.utils.DigestUtil;
+import com.jackasher.ware_manager.utils.TokenUtils;
+import com.jackasher.ware_manager.utils.WarehouseConstants;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -55,13 +59,41 @@ public class LoginController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TokenUtils tokenUtils;
+
     @RequestMapping("/login")
     public Result login(@RequestBody LoginUser loginUser) {
 
-        System.out.println("Login executed!");
+        String verificationCode = loginUser.getVerificationCode();
+        if(!stringRedisTemplate.hasKey(verificationCode)){
+            return Result.err(Result.CODE_ERR_BUSINESS,"验证码错误");
+        }
+
+
+
         User user = userService.queryUserByCode(loginUser.getUserCode());
-        System.out.println("/login执行" + user);
-        return null;
+        if (user != null){
+            if (user.getUserState().equals(WarehouseConstants.USER_STATE_PASS)) {
+                String userPwd = loginUser.getUserPwd();
+
+                userPwd= DigestUtil.hmacSign(userPwd);
+
+                if (userPwd.equals(user.getUserPwd())) {
+                    CurrentUser currentUser = new CurrentUser(user.getUserId(), user.getGetCode(), user.getUserName());
+                    String token = tokenUtils.loginSign(currentUser, userPwd);
+                    return Result.ok("登陆成功",token);
+
+                }else {
+                    return Result.err(Result.CODE_ERR_BUSINESS,"密码错误");
+                }
+            }else {
+                return Result.err(Result.CODE_ERR_BUSINESS,"用户未审核");
+            }
+        }else {
+            return Result.err(Result.CODE_ERR_BUSINESS,"用户不存在");
+        }
     }
 
 }

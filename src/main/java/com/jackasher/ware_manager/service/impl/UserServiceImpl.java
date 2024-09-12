@@ -22,10 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User queryUserByCode(String userCode) {
-
-        System.out.println("userMapper" +  userMapper);
         User userByCode = userMapper.findUserByCode(userCode);
-        System.out.println(userByCode);
         return userByCode;
     }
 }
