@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -81,8 +82,11 @@ public class LoginController {
                 userPwd= DigestUtil.hmacSign(userPwd);
 
                 if (userPwd.equals(user.getUserPwd())) {
-                    CurrentUser currentUser = new CurrentUser(user.getUserId(), user.getGetCode(), user.getUserName());
+                    CurrentUser currentUser = new CurrentUser(user.getUserId(), user.getUserCode(), user.getUserName());
                     String token = tokenUtils.loginSign(currentUser, userPwd);
+
+                    System.out.println("LoginToken: " +  token + "@" + currentUser + "@" + userPwd + "@" + user);
+
                     return Result.ok("登陆成功",token);
 
                 }else {
@@ -94,6 +98,14 @@ public class LoginController {
         }else {
             return Result.err(Result.CODE_ERR_BUSINESS,"用户不存在");
         }
+    }
+
+    @RequestMapping("/curr-user")
+    public Result currentUser(@RequestHeader(WarehouseConstants.HEADER_TOKEN_NAME) String token){
+        System.out.println("token: " + token);
+        CurrentUser currentUser = tokenUtils.getCurrentUser(token);
+        System.out.println("currentUser: " + currentUser);
+        return Result.ok(currentUser);
     }
 
 }
