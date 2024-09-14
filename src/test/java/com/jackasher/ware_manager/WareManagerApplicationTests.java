@@ -16,7 +16,7 @@ class WareManagerApplicationTests {
     void tokenUtilTest() {
         String token = tokenUtils.loginSign(new CurrentUser(1, "jack", "Leo"), "casio233.");
         CurrentUser currentUser = tokenUtils.getCurrentUser(token);
-        System.out.println(currentUser);
+
     }
 
 }

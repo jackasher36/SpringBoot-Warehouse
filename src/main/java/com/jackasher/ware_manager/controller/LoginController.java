@@ -67,6 +67,7 @@ public class LoginController {
     @RequestMapping("/login")
     public Result login(@RequestBody LoginUser loginUser) {
 
+
         String verificationCode = loginUser.getVerificationCode();
         if(!stringRedisTemplate.hasKey(verificationCode)){
             return Result.err(Result.CODE_ERR_BUSINESS,"验证码错误");
@@ -85,7 +86,6 @@ public class LoginController {
                     CurrentUser currentUser = new CurrentUser(user.getUserId(), user.getUserCode(), user.getUserName());
                     String token = tokenUtils.loginSign(currentUser, userPwd);
 
-                    System.out.println("LoginToken: " +  token + "@" + currentUser + "@" + userPwd + "@" + user);
 
                     return Result.ok("登陆成功",token);
 
@@ -102,9 +102,7 @@ public class LoginController {
 
     @RequestMapping("/curr-user")
     public Result currentUser(@RequestHeader(WarehouseConstants.HEADER_TOKEN_NAME) String token){
-        System.out.println("token: " + token);
         CurrentUser currentUser = tokenUtils.getCurrentUser(token);
-        System.out.println("currentUser: " + currentUser);
         return Result.ok(currentUser);
     }
 

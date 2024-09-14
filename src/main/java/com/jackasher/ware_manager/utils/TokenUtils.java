@@ -73,14 +73,11 @@ public class TokenUtils {
         } catch (JWTDecodeException e) {
             throw new BusinessException("令牌格式错误，请登录！");
         }
-
-        System.out.println("decodedJWT: "  + decodedJWT);
         //从解码后的token中获取用户信息并封装到CurrentUser对象中返回
         int userId = decodedJWT.getClaim(CLAIM_NAME_USERID).asInt();//用户账号id
         String userCode = decodedJWT.getClaim(CLAIM_NAME_USERCODE).asString();//用户账号
         String userName = decodedJWT.getClaim(CLAIM_NAME_USERNAME).asString();//用户姓名
 
-        System.out.println(userId + ":" + "" +  userCode + ":"+ userName);
         if(StringUtils.isEmpty(userCode) || StringUtils.isEmpty(userName)){
             throw new BusinessException("令牌缺失用户信息，请登录！");
         }
