@@ -1,5 +1,6 @@
 package com.jackasher.ware_manager.controller;
 
+import com.jackasher.ware_manager.dto.AssignRoleDto;
 import com.jackasher.ware_manager.entity.Auth;
 import com.jackasher.ware_manager.entity.Result;
 import com.jackasher.ware_manager.entity.Role;
@@ -142,6 +143,14 @@ public class UserController {
      * @RequestBody AssignRoleDto assignRoleDto将请求传递的json数据
      * 封装到参数AssignRoleDto对象中;
      */
+
+    @RequestMapping("/assignRole")
+    public Result assignRole(@RequestBody AssignRoleDto assignRoleDto){
+        //执行业务
+        roleService.assignRole(assignRoleDto);
+        //响应
+        return Result.ok("分配角色成功！");
+    }
 
     /**
      * 删除用户的url接口/user/deleteUser/{userId}

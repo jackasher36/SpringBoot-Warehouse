@@ -32,7 +32,7 @@ public class LoginFilter implements Filter {
         urlList.add("/captcha/captchaImage");
         urlList.add("/login");
         String url = httpServletRequest.getServletPath();
-        if (urlList.contains(url)) {
+        if (urlList.contains(url) || url.contains("/img/upload")) {
             filterChain.doFilter(httpServletRequest,httpServletResponse);
             return;
         }
