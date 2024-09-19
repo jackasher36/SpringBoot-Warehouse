@@ -16,7 +16,6 @@ public class RequestParamsFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
 
-        System.out.println("RequestParamsFilter执行!");
         // 获取请求的路径
         String requestURI = httpRequest.getRequestURI();         // 完整请求URI
         String servletPath = httpRequest.getServletPath();       // Servlet路径

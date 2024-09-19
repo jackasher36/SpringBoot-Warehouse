@@ -23,14 +23,14 @@ public class LoginFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
-        System.out.println("loginFilter执行!");
         HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
         ArrayList<Object> urlList = new ArrayList<>();
         urlList.add("/captcha/captchaImage");
         urlList.add("/login");
+        urlList.add("/logout");
+        urlList.add("/product/img-upload");
         String url = httpServletRequest.getServletPath();
         if (urlList.contains(url) || url.contains("/img/upload")) {
             filterChain.doFilter(httpServletRequest,httpServletResponse);

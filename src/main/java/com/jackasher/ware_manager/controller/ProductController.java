@@ -172,7 +172,8 @@ public class ProductController {
             //拿到图片上传到的目录的磁盘路径
             String uploadDirPath = uploadDirFile.getAbsolutePath();
             //拿到图片保存到的磁盘路径
-            String fileUploadPath = uploadDirPath + "\\" + file.getOriginalFilename();
+            String fileUploadPath = uploadDirPath + "/" + file.getOriginalFilename();
+            System.out.println("fileUploadPath: " + fileUploadPath);
             //保存图片
             file.transferTo(new File(fileUploadPath));
             //成功响应
